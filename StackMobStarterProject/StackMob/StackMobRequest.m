@@ -293,7 +293,21 @@
     
     [request addValue:[[[StackMob stackmob] cookieStore] cookieHeader] forHTTPHeaderField:@"Cookie"];
     
-	[request prepare];
+    if(session.oauthVersion == OAuth2)
+    {
+        [request addValue:session.apiKey forHTTPHeaderField:@"X-StackMob-API-Key"];
+        if(session.oauth2TokenValid)
+        {
+            NSString *oauth2MAC = [self createMACHeaderForOAuth2];
+            [request addValue:oauth2MAC forHTTPHeaderField:@"Authorization"];
+            SMLog(@"request headers are: %@", [request allHTTPHeaderFields]);
+        }
+    }
+    else
+    {
+        [request prepare];
+    }
+
     [self setBodyForRequest:request];
     
     
@@ -320,10 +334,13 @@
                                                     withTemplate:@"$1$2(truncated)$4"];
         SMLog(@"POST Data: %@", postDataString);
 #endif
-        [request setHTTPBody:postData];	
-        NSString *contentType = [NSString stringWithFormat:@"application/json"];
-        [request addValue:contentType forHTTPHeaderField: @"Content-Type"]; 
+        [request setHTTPBody:postData];
+        [request addValue:[self contentType] forHTTPHeaderField: @"Content-Type"]; 
 	}
+}
+
+- (NSString *)contentType {
+    return @"application/json";
 }
 
 - (NSData *)postBody {
@@ -387,6 +404,11 @@
         [[self delegate] requestCompleted:self];
 }
 
+- (id) resultFromSuccessString:(NSString *)textResult
+{
+    return [textResult objectFromJSONString];
+}
+
 
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection
 {
@@ -428,7 +450,7 @@
         @try{
             [mConnectionData setLength:0];
             if (statusCode < 400) {
-                result = [textResult objectFromJSONString];
+                result = [self resultFromSuccessString:textResult];
             } else {
                 NSDictionary *errResult = (NSDictionary *)[textResult objectFromJSONString]; 
                 NSString *failMsg;
@@ -494,7 +516,20 @@
 	
 	[request addValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 	[request addValue:@"deflate" forHTTPHeaderField:@"Accept-Encoding"];
-	[request prepare];
+	if(session.oauthVersion == OAuth2)
+    {
+        [request addValue:session.apiKey forHTTPHeaderField:@"X-StackMob-API-Key"];
+        if(session.oauth2TokenValid)
+        {
+            NSString *oauth2MAC = [self createMACHeaderForOAuth2];
+            [request addValue:oauth2MAC forHTTPHeaderField:@"Authorization"];
+            SMLog(@"request headers are: %@", [request allHTTPHeaderFields]);
+        }
+    }
+    else
+    {
+        [request prepare];
+    }
 	if (![[self httpMethod] isEqualToString: @"GET"]) {
 		[request setHTTPBody:[[mArguments JSONString] dataUsingEncoding:NSUTF8StringEncoding]];	
 		NSString *contentType = [NSString stringWithFormat:@"application/json"];
@@ -504,7 +539,7 @@
 	
 	[mConnectionData setLength:0];
     
-    SMLog(@"StackMobRequest %p: sending synchronous oauth request: %@", self, request);
+    SMLog(@"StackMobRequest %p: sending synchronous oauth request: %@ with headers %@", self, request, [request allHTTPHeaderFields]);
     
     _requestFinished = NO;
     self.connectionError = nil;
@@ -521,6 +556,43 @@
 
 - (NSString*) description {
     return [NSString stringWithFormat:@"%@: %@", [super description], self.url];
+}
+
+- (NSString *)createMACHeaderForOAuth2
+{
+    // get the id
+    NSString *access_token = [session oauth2Token];
+    double timestamp = [[NSDate date] timeIntervalSince1970];
+    // create the nonce
+    NSString *nonce = [NSString stringWithFormat:@"n%d", arc4random() % 10000];    
+    // create the mac
+    NSString *key = [session oauth2Key];
+    NSArray *hostAndPort = [[NSString stringWithFormat:@"api.%@.%@", [[[StackMob stackmob] session] subDomain], [[[StackMob stackmob] session] domain]] componentsSeparatedByString:@":"];
+    NSString *host = [hostAndPort objectAtIndex:0];
+    NSString *port = [hostAndPort count] > 1 ? [hostAndPort objectAtIndex:1] : @"80";
+    NSString *httpVerb = self.httpMethod;
+    NSString *uri = [NSString stringWithFormat:@"/%@", self.method];
+    
+    if (([[self httpMethod] isEqualToString:@"GET"] || [[self httpMethod] isEqualToString:@"DELETE"]) &&    
+		[mArguments count] > 0) {
+		uri = [uri stringByAppendingFormat:@"?%@", [mArguments queryString]];
+	}
+
+    // create base
+    NSArray *baseArray = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%.f", timestamp], nonce, httpVerb, uri, host, port, nil];
+    unichar newline = 0x0A;
+    NSString *baseString = [baseArray componentsJoinedByString:[NSString stringWithFormat:@"%C", newline]];
+    baseString = [baseString stringByAppendingString:[NSString stringWithFormat:@"%C", newline]];
+    baseString = [baseString stringByAppendingString:[NSString stringWithFormat:@"%C", newline]];
+    
+    //bstring through bin to string using crypto
+    OAHMAC_SHA1SignatureProvider *provider = [[OAHMAC_SHA1SignatureProvider alloc] init];
+    NSString *mac = [provider signClearText:baseString withSecret:key];
+    [provider release];
+    //return 'MAC id="' + id + '",ts="' + ts + '",nonce="' + nonce + '",mac="' + mac + '"'
+    unichar quotes = 0x22;
+    NSString *returnString = [NSString stringWithFormat:@"MAC id=%C%@%C,ts=%C%.f%C,nonce=%C%@%C,mac=%C%@%C", quotes, access_token, quotes, quotes, timestamp, quotes, quotes, nonce, quotes, quotes, mac, quotes];
+    return returnString; 
 }
 
 

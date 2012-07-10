@@ -20,6 +20,7 @@
 #define StackMobDebug(format, ...)
 #endif
 
+#define STACKMOB_OAUTH_VERSION      OAuth2
 #define STACKMOB_PUBLIC_KEY         @"YOUR_PUBLIC_KEY"
 #define STACKMOB_PRIVATE_KEY        @"YOUR_PRIVATE_KEY"
 #define STACKMOB_APP_NAME           @"YOUR_APP_NAME"

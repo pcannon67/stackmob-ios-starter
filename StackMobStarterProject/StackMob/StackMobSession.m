@@ -17,6 +17,10 @@
 @interface StackMobSession(Private)
 - (void)setup;
 
+- (NSString *)oauth2TokenKey;
+- (NSString *)oauth2TokenExpirationKey;
+- (NSString *)oauth2Key;
+
 @end
 
 @interface StackMobSession()
@@ -44,39 +48,47 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
 @synthesize nextTimeCheck = _nextTimeCheck;
 @synthesize serverTimeDiff = _serverTimeDiff;
 @synthesize lastUserLoginName = _lastUserLoginName;
+@synthesize oauthVersion = _oauthVersion;
+@synthesize oauth2Token = _oauth2Token;
+@synthesize oauth2TokenExpiration = _oauth2TokenExpiration;
+@synthesize oauth2Key = _oauth2Key;
 @synthesize pushURL;
 
 + (StackMobSession*)session {
 	return sharedSession;
 }
 
-+ (StackMobSession*)sessionForApplication:(NSString*)key 
++ (StackMobSession*)sessionForApplication:(int)oauthVersion 
+                                      key:(NSString*)key 
                                    secret:(NSString*)secret
                                   appName:(NSString*)appName
                                 subDomain:(NSString*)subDomain
                          apiVersionNumber:(NSNumber*)apiVersionNumber 
 {
-	return [self sessionForApplication:key secret:secret appName:appName 
+	return [self sessionForApplication:oauthVersion key:key secret:secret appName:appName 
 							 subDomain:subDomain domain:SMDefaultDomain apiVersionNumber:apiVersionNumber];
 }
 
-+ (StackMobSession*)sessionForApplication:(NSString*)key 
++ (StackMobSession*)sessionForApplication:(int)oauthVersion 
+                                      key:(NSString*)key 
                                    secret:(NSString*)secret 
                                   appName:(NSString*)appName
                                 subDomain:(NSString*)subDomain 
                                    domain:(NSString*)domain 
                          apiVersionNumber:(NSNumber*)apiVersionNumber
 {
-	StackMobSession* session = [[[StackMobSession alloc] initWithKey:key 
-                                                              secret:secret 
-                                                             appName:appName
-                                                           subDomain:subDomain 
-                                                              domain:domain
-                                                    apiVersionNumber:apiVersionNumber] autorelease];
+	StackMobSession* session = [[[StackMobSession alloc] initWithVersion:oauthVersion
+                                                                    key:key 
+                                                                  secret:secret 
+                                                                 appName:appName
+                                                               subDomain:subDomain 
+                                                                  domain:domain
+                                                        apiVersionNumber:apiVersionNumber] autorelease];
 	return session;
 }
 
-+ (StackMobSession*)sessionForApplication:(NSString*)key 
++ (StackMobSession*)sessionForApplication:(int)oauthVersion 
+                                      key:(NSString*)key 
                                    secret:(NSString*)secret 
                                   appName:(NSString*)appName
                                 subDomain:(NSString*)subDomain 
@@ -84,13 +96,14 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
                            userObjectName:(NSString*)userObjectName
                          apiVersionNumber:(NSNumber*)apiVersionNumber
 {
-	StackMobSession* session = [[[StackMobSession alloc] initWithKey:key 
-                                                              secret:secret 
-                                                             appName:appName
-                                                           subDomain:subDomain 
-                                                              domain:domain
-                                                      userObjectName:userObjectName
-                                                    apiVersionNumber:apiVersionNumber] autorelease];
+	StackMobSession* session = [[[StackMobSession alloc] initWithVersion:oauthVersion
+                                                                     key:key 
+                                                                  secret:secret 
+                                                                 appName:appName
+                                                               subDomain:subDomain 
+                                                                  domain:domain
+                                                          userObjectName:userObjectName
+                                                        apiVersionNumber:apiVersionNumber] autorelease];
     SMLog(@"apiVersionNumber %@", apiVersionNumber);
     
 	return session;
@@ -116,17 +129,19 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
   return  [self urlForMethod:method isUserBased:userBasedRequest isSecure:NO];
 }
 
-- (StackMobSession*)initWithKey:(NSString*)key 
-                         secret:(NSString*)secret 
-                        appName:(NSString*)appName
-                      subDomain:(NSString*)subDomain 
-                         domain:(NSString*)domain 
-               apiVersionNumber:(NSNumber*)apiVersionNumber
+- (StackMobSession*)initWithVersion:(int)oauthVersion 
+                                key:(NSString*)key 
+                             secret:(NSString*)secret 
+                            appName:(NSString*)appName
+                          subDomain:(NSString*)subDomain 
+                             domain:(NSString*)domain 
+                   apiVersionNumber:(NSNumber*)apiVersionNumber
 {
 	if ((self = [super init])) {
 		if (!sharedSession) {
 			sharedSession = self;
 		}
+        _oauthVersion = oauthVersion;
 		_apiKey = [key copy];
 		_apiSecret = [secret copy];
 		_appName = [appName copy];
@@ -138,18 +153,20 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
 	return self;
 }
 
-- (StackMobSession*)initWithKey:(NSString*)key 
-                         secret:(NSString*)secret 
-                        appName:(NSString*)appName
-                      subDomain:(NSString*)subDomain 
-                         domain:(NSString*)domain 
-                 userObjectName:(NSString *)userObjectName
-               apiVersionNumber:(NSNumber*)apiVersionNumber
+- (StackMobSession*)initWithVersion:(int)oauthVersion 
+                                key:(NSString*)key 
+                             secret:(NSString*)secret 
+                            appName:(NSString*)appName
+                          subDomain:(NSString*)subDomain 
+                             domain:(NSString*)domain 
+                     userObjectName:(NSString *)userObjectName
+                   apiVersionNumber:(NSNumber*)apiVersionNumber
 {
 	if ((self = [super init])) {
 		if (!sharedSession) {
 			sharedSession = self;
 		}
+        _oauthVersion = oauthVersion;
         _apiKey = [key copy];
         _apiSecret = [secret copy];
         _appName = [appName copy];
@@ -175,6 +192,8 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
     regularURL = [[NSString stringWithFormat:@"http://%@", url] retain];
     _serverTimeDiff = [[NSUserDefaults standardUserDefaults] doubleForKey:serverTimeDiffKey];
     _nextTimeCheck = [[NSDate date] retain];
+    _oauth2Token = [[NSUserDefaults standardUserDefaults] objectForKey:[self oauth2TokenKey]];
+    _oauth2TokenExpiration = [[NSUserDefaults standardUserDefaults] objectForKey:[self oauth2TokenExpirationKey]];
 }
 
 - (void)dealloc {
@@ -211,6 +230,11 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
 	return secureURL;
 }
 
+- (BOOL) oauth2TokenValid
+{
+    return self.oauth2TokenExpiration != nil && [[self.oauth2TokenExpiration laterDate:[NSDate date]] isEqualToDate:self.oauth2TokenExpiration];
+}
+
 
 - (NSString *)userAgentString {
     return [NSString stringWithFormat:@"StackMob (iOS; %@)/%@", STACKMOB_SDK_VERSION, _appName];
@@ -239,6 +263,25 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
             _nextTimeCheck = newDate;
         }
     }
+}
+
+- (NSString *)oauth2TokenKey
+{
+    return [NSString stringWithFormat:@"%@.token", _apiKey];
+}
+- (NSString *)oauth2TokenExpirationKey
+{
+    return [NSString stringWithFormat:@"%@.token.expiration", _apiKey];
+}
+
+-(void)saveOAuth2AccessToken:(NSString *)token withExpiration:(NSDate *)date andKey:(NSString *)key
+{
+    self.oauth2Key = key;
+    self.oauth2Token = token;
+    self.oauth2TokenExpiration = date;
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:[self oauth2TokenKey]];
+    [[NSUserDefaults standardUserDefaults] setObject:date forKey:[self oauth2TokenExpirationKey]];
+    
 }
 
 @end

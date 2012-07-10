@@ -20,6 +20,7 @@
 #import "StackMobClientData.h"
 #import "StackMobHerokuRequest.h"
 #import "StackMobBulkRequest.h"
+#import "StackMobAccessTokenRequest.h"
 
 @interface StackMob()
 
@@ -59,12 +60,13 @@ static StackMob *_sharedManager = nil;
 static SMEnvironment environment;
 
 
-+ (StackMob *)setApplication:(NSString *)apiKey secret:(NSString *)apiSecret appName:(NSString *)appName subDomain:(NSString *)subDomain userObjectName:(NSString *)userObjectName apiVersionNumber:(NSNumber *)apiVersion
++ (StackMob *)setApplication:(OAuthVersion)oauthVersion key:(NSString *)apiKey secret:(NSString *)apiSecret appName:(NSString *)appName subDomain:(NSString *)subDomain userObjectName:(NSString *)userObjectName apiVersionNumber:(NSNumber *)apiVersion
 {
     if (_sharedManager == nil) {
         _sharedManager = [[super allocWithZone:NULL] init];
         environment = SMEnvironmentProduction;
-        _sharedManager.session = [StackMobSession sessionForApplication:apiKey
+        _sharedManager.session = [StackMobSession sessionForApplication:oauthVersion
+                                                                    key:apiKey
                                                                  secret:apiSecret
                                                                 appName:appName
                                                               subDomain:subDomain
@@ -88,7 +90,8 @@ static SMEnvironment environment;
         if(appInfo){
             NSLog(@"Loading applicatino info from StackMob.plist is being deprecated for security purposes.");
             NSLog(@"Please define your application info in your app's prefix.pch");
-            _sharedManager.session = [StackMobSession sessionForApplication:[appInfo objectForKey:@"publicKey"]
+            _sharedManager.session = [StackMobSession sessionForApplication:OAuth1
+                                                                        key:[appInfo objectForKey:@"publicKey"]
                                                                      secret:[appInfo objectForKey:@"privateKey"]
                                                                     appName:[appInfo objectForKey:@"appName"]
                                                                   subDomain:[appInfo objectForKey:@"appSubdomain"]
@@ -99,7 +102,8 @@ static SMEnvironment environment;
         }
         else{
 #ifdef STACKMOB_PUBLIC_KEY
-            _sharedManager.session = [StackMobSession sessionForApplication:STACKMOB_PUBLIC_KEY
+            _sharedManager.session = [StackMobSession sessionForApplication:STACKMOB_OAUTH_VERSION
+                                                                        key:STACKMOB_PUBLIC_KEY
                                                                      secret:STACKMOB_PRIVATE_KEY
                                                                     appName:STACKMOB_APP_NAME
 #ifdef STACKMOB_APP_MOB
@@ -119,6 +123,7 @@ static SMEnvironment environment;
         _sharedManager.callbacks = [NSMutableArray array];
         _sharedManager.cookieStore = [[[StackMobCookieStore alloc] initWithSession:_sharedManager.session] retain];
     }
+
     return _sharedManager;
 }
 
@@ -176,10 +181,21 @@ static SMEnvironment environment;
 
 - (StackMobRequest *)loginWithArguments:(NSDictionary *)arguments andCallback:(StackMobCallback)callback
 {
-    StackMobRequest *request = [StackMobRequest requestForMethod:[NSString stringWithFormat:@"%@/login", self.session.userObjectName]
-                                                   withArguments:arguments
-                                                    withHttpVerb:GET]; 
-    request.isSecure = YES;
+    StackMobRequest *request;
+    
+    if(self.session.oauthVersion == OAuth2)
+    {
+        request = [StackMobAccessTokenRequest requestForMethod:[NSString stringWithFormat:@"%@/accessToken", [self.session userObjectName]] withArguments:arguments];
+    }
+    else 
+    {
+       request = [StackMobRequest requestForMethod:[NSString stringWithFormat:@"%@/login", [self.session userObjectName]]
+                              withArguments:arguments
+                               withHttpVerb:GET];
+       request.isSecure = YES;
+    }
+
+    
     _session.lastUserLoginName = [arguments valueForKey:@"username"];
     
     [self queueRequest:request andCallback:callback];
@@ -192,6 +208,7 @@ static SMEnvironment environment;
     StackMobRequest *request = [StackMobRequest requestForMethod:[NSString stringWithFormat:@"%@/logout", self.session.userObjectName]
                                                    withArguments:[NSDictionary dictionary]
                                                     withHttpVerb:GET]; 
+    self.session.oauth2TokenExpiration = [NSDate date];
     request.isSecure = YES;
     [self queueRequest:request andCallback:callback];
     
@@ -453,6 +470,7 @@ static SMEnvironment environment;
     StackMobRequest *request = [StackMobRequest requestForMethod:[self escapePath:path]
                                                    withArguments:arguments
                                                     withHttpVerb:POST];
+    
     [self queueRequest:request andCallback:callback];
     return request;
 }
@@ -639,11 +657,18 @@ static SMEnvironment environment;
 
 - (BOOL) isLoggedIn
 {
-    NSHTTPCookie *sessionCookie = [[_sharedManager cookieStore] sessionCookie];
-    if(sessionCookie != nil) {
-        BOOL cookieIsStillValid = [[[NSDate date] laterDate:[sessionCookie expiresDate]] isEqualToDate:[sessionCookie expiresDate]];
-        return cookieIsStillValid && ![self isLoggedOut];
+    if(self.session.oauthVersion == OAuth2) {
+        return self.session.oauth2TokenValid;
     }
+    else 
+    {
+        NSHTTPCookie *sessionCookie = [[_sharedManager cookieStore] sessionCookie];
+        if(sessionCookie != nil) {
+            BOOL cookieIsStillValid = [[[NSDate date] laterDate:[sessionCookie expiresDate]] isEqualToDate:[sessionCookie expiresDate]];
+            return cookieIsStillValid && ![self isLoggedOut];
+        }
+    }
+
     return false;
 }
 
@@ -654,9 +679,15 @@ static SMEnvironment environment;
 
 - (BOOL) isLoggedOut
 {
-    NSHTTPCookie *sessionCookie = [_cookieStore sessionCookie];
-    //The logged out cookie is a json string.
-    return sessionCookie != nil && [[sessionCookie value] rangeOfString:@":"].location != NSNotFound;
+    if(self.session.oauthVersion == OAuth2) {
+        return self.session.oauth2TokenExpiration != nil && !self.session.oauth2TokenValid;
+    }
+    else 
+    {
+        NSHTTPCookie *sessionCookie = [_cookieStore sessionCookie];
+        //The logged out cookie is a json string.
+        return sessionCookie != nil && [[sessionCookie value] rangeOfString:@":"].location != NSNotFound;
+    }
 }
 
 

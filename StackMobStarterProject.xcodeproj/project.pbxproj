@@ -61,6 +61,7 @@
 		DE5A103E1563143600A2AC6B /* CreateObjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5A103D1563143600A2AC6B /* CreateObjectViewController.m */; };
 		DE5A104615633E8B00A2AC6B /* ReadObjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5A104515633E8B00A2AC6B /* ReadObjectViewController.m */; };
 		DE5A104915633F5900A2AC6B /* UpdateObjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5A104815633F5900A2AC6B /* UpdateObjectViewController.m */; };
+		DEA495AF15ACB8A400E4725A /* StackMobAccessTokenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DEA495AE15ACB8A400E4725A /* StackMobAccessTokenRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,6 +172,8 @@
 		DE5A104515633E8B00A2AC6B /* ReadObjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadObjectViewController.m; sourceTree = "<group>"; };
 		DE5A104715633F5900A2AC6B /* UpdateObjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateObjectViewController.h; sourceTree = "<group>"; };
 		DE5A104815633F5900A2AC6B /* UpdateObjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateObjectViewController.m; sourceTree = "<group>"; };
+		DEA495AD15ACB8A400E4725A /* StackMobAccessTokenRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackMobAccessTokenRequest.h; sourceTree = "<group>"; };
+		DEA495AE15ACB8A400E4725A /* StackMobAccessTokenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackMobAccessTokenRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,6 +294,8 @@
 			isa = PBXGroup;
 			children = (
 				DE0AA9111578133200F3490D /* External */,
+				DEA495AD15ACB8A400E4725A /* StackMobAccessTokenRequest.h */,
+				DEA495AE15ACB8A400E4725A /* StackMobAccessTokenRequest.m */,
 				DE0AA9401578133200F3490D /* SMFile.h */,
 				DE0AA9411578133200F3490D /* SMFile.m */,
 				DE0AA9421578133200F3490D /* SMGeoPoint.h */,
@@ -595,6 +600,7 @@
 				DE0AA97C1578133200F3490D /* StackMobSession.m in Sources */,
 				DE0AA97D1578133200F3490D /* NSData+Base64.m in Sources */,
 				DE0AA97E1578133200F3490D /* NSData+JSON.m in Sources */,
+				DEA495AF15ACB8A400E4725A /* StackMobAccessTokenRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

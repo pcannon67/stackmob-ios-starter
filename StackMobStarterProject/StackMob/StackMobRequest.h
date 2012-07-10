@@ -129,6 +129,8 @@ typedef enum {
 - (id)sendSynchronousRequestProvidingError:(NSError**)error __attribute__((deprecated));
 - (id)sendSynchronousRequest;
 
+- (NSString *)contentType;
+
 // return the post body as NSData
 - (NSData *)postBody;
 
@@ -136,6 +138,10 @@ typedef enum {
 
 /* translate enum to string */
 + (NSString*)stringFromHttpVerb:(SMHttpVerb)httpVerb;
+
+- (id) resultFromSuccessString:(NSString *)textResult;
+
+- (NSString *)createMACHeaderForOAuth2;
 
 @end
 
