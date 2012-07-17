@@ -208,9 +208,19 @@ static SMEnvironment environment;
     StackMobRequest *request = [StackMobRequest requestForMethod:[NSString stringWithFormat:@"%@/logout", self.session.userObjectName]
                                                    withArguments:[NSDictionary dictionary]
                                                     withHttpVerb:GET]; 
-    self.session.oauth2TokenExpiration = [NSDate date];
-    request.isSecure = YES;
-    [self queueRequest:request andCallback:callback];
+    
+    if (self.session.oauthVersion == OAuth2) {
+        [self queueRequest:request andCallback:^(BOOL success, id result) {
+            self.session.oauth2TokenExpiration = [NSDate date];
+            callback(success, result);
+        }];
+        
+    }
+    else {
+        request.isSecure = YES;
+        [self queueRequest:request andCallback:callback];
+    }
+    
     
     return request;
     
