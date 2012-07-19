@@ -214,14 +214,14 @@ static SMEnvironment environment;
             self.session.oauth2TokenExpiration = [NSDate date];
             callback(success, result);
         }];
-        
+
     }
     else {
         request.isSecure = YES;
         [self queueRequest:request andCallback:callback];
     }
     
-    
+        
     return request;
     
 }

@@ -257,6 +257,11 @@
     return [NSString stringWithFormat:@"application/vnd.stackmob+json; version=%d",[version intValue]];
 }
 
+- (BOOL)useOAuth2
+{
+    return session.useOAuth2;
+}
+
 - (void)sendRequest
 {
 	_requestFinished = NO;

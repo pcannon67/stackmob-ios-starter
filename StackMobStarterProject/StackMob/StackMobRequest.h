@@ -141,6 +141,8 @@ typedef enum {
 
 - (id) resultFromSuccessString:(NSString *)textResult;
 
+- (BOOL)useOAuth2;
+
 - (NSString *)createMACHeaderForOAuth2;
 
 @end
