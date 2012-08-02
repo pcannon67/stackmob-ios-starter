@@ -243,4 +243,6 @@ static NSString *const SMSubdomainDefault = @"mob1";
 
 -(void)saveOAuth2AccessToken:(NSString *)token withExpiration:(NSDate *)date andKey:(NSString *)key;
 
+-(BOOL)useOAuth2;
+
 @end

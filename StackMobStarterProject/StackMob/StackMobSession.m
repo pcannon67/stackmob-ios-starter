@@ -284,4 +284,9 @@ static NSString *const serverTimeDiffKey = @"stackmob.servertimediff";
     
 }
 
+-(BOOL)useOAuth2
+{
+    return [self oauthVersion] == 2;
+}
+
 @end

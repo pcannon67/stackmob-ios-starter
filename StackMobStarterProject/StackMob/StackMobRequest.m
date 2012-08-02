@@ -257,6 +257,11 @@
     return [NSString stringWithFormat:@"application/vnd.stackmob+json; version=%d",[version intValue]];
 }
 
+- (BOOL)useOAuth2
+{
+    return session.useOAuth2;
+}
+
 - (void)sendRequest
 {
 	_requestFinished = NO;
@@ -293,7 +298,7 @@
     
     [request addValue:[[[StackMob stackmob] cookieStore] cookieHeader] forHTTPHeaderField:@"Cookie"];
     
-    if(session.oauthVersion == OAuth2)
+    if([self useOAuth2])
     {
         [request addValue:session.apiKey forHTTPHeaderField:@"X-StackMob-API-Key"];
         if(session.oauth2TokenValid)
@@ -516,7 +521,7 @@
 	
 	[request addValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 	[request addValue:@"deflate" forHTTPHeaderField:@"Accept-Encoding"];
-	if(session.oauthVersion == OAuth2)
+	if([self useOAuth2])
     {
         [request addValue:session.apiKey forHTTPHeaderField:@"X-StackMob-API-Key"];
         if(session.oauth2TokenValid)
@@ -569,9 +574,21 @@
     NSString *key = [session oauth2Key];
     NSArray *hostAndPort = [[NSString stringWithFormat:@"api.%@.%@", [[[StackMob stackmob] session] subDomain], [[[StackMob stackmob] session] domain]] componentsSeparatedByString:@":"];
     NSString *host = [hostAndPort objectAtIndex:0];
-    NSString *port = [hostAndPort count] > 1 ? [hostAndPort objectAtIndex:1] : @"80";
+    NSString *port; 
+    if([hostAndPort count] > 1)
+    {
+        port = [hostAndPort objectAtIndex:1];
+    } 
+    else 
+    {
+        port = self.isSecure ? @"443" : @"80";
+    } 
     NSString *httpVerb = self.httpMethod;
     NSString *uri = [NSString stringWithFormat:@"/%@", self.method];
+    if(self.userBased) {
+        uri = [NSString stringWithFormat:@"/%@%@", session.userObjectName, uri];
+    }
+    
     
     if (([[self httpMethod] isEqualToString:@"GET"] || [[self httpMethod] isEqualToString:@"DELETE"]) &&    
 		[mArguments count] > 0) {

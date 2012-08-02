@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "StackMobPushRequest.h"
+#import "StackMob.h"
 
 @implementation StackMobPushRequest
 
@@ -31,6 +32,10 @@
         [r setArguments: arguments];
     }
     return r;
+}
+
+- (BOOL)useOAuth2 {
+    return NO;
 }
 
 - (NSString *)getBaseURL {
