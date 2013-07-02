@@ -27,6 +27,8 @@
 		DE01BBFF17722DA000D80549 /* TodoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE01BBFE17722DA000D80549 /* TodoDetailViewController.m */; };
 		DE01BC381772397800D80549 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = DE01BC011772397800D80549 /* CHANGELOG.md */; };
 		DE01BC391772397800D80549 /* libstackmob-v2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE01BC371772397800D80549 /* libstackmob-v2.0.0.a */; };
+		DE4FBFE617826B7500E13A22 /* starter-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DE4FBFE417826B7500E13A22 /* starter-app-icon.png */; };
+		DE4FBFE717826B7500E13A22 /* starter-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE4FBFE517826B7500E13A22 /* starter-app-icon@2x.png */; };
 		DEAA26DE177B9A8400A6F62F /* Todo.m in Sources */ = {isa = PBXBuildFile; fileRef = DEAA26DD177B9A8400A6F62F /* Todo.m */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +110,8 @@
 		DE01BC351772397800D80549 /* Synchronization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Synchronization.h; sourceTree = "<group>"; };
 		DE01BC361772397800D80549 /* SystemInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemInformation.h; sourceTree = "<group>"; };
 		DE01BC371772397800D80549 /* libstackmob-v2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libstackmob-v2.0.0.a"; sourceTree = "<group>"; };
+		DE4FBFE417826B7500E13A22 /* starter-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "starter-app-icon.png"; sourceTree = "<group>"; };
+		DE4FBFE517826B7500E13A22 /* starter-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "starter-app-icon@2x.png"; sourceTree = "<group>"; };
 		DEAA26DC177B9A8400A6F62F /* Todo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Todo.h; sourceTree = "<group>"; };
 		DEAA26DD177B9A8400A6F62F /* Todo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Todo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,6 +190,7 @@
 		DE01BB6317712C7200D80549 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DE4FBFE317826B2900E13A22 /* Assets */,
 				DE01BB6417712C7200D80549 /* StackMobStarterProject-Info.plist */,
 				DE01BB6517712C7200D80549 /* InfoPlist.strings */,
 				DE01BB6817712C7200D80549 /* main.m */,
@@ -273,6 +278,15 @@
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
+		DE4FBFE317826B2900E13A22 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				DE4FBFE417826B7500E13A22 /* starter-app-icon.png */,
+				DE4FBFE517826B7500E13A22 /* starter-app-icon@2x.png */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -330,6 +344,8 @@
 				DE01BB7317712C7200D80549 /* Default-568h@2x.png in Resources */,
 				DE01BBC21771318500D80549 /* MainStoryboard.storyboard in Resources */,
 				DE01BC381772397800D80549 /* CHANGELOG.md in Resources */,
+				DE4FBFE617826B7500E13A22 /* starter-app-icon.png in Resources */,
+				DE4FBFE717826B7500E13A22 /* starter-app-icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
