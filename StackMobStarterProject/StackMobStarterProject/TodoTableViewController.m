@@ -153,7 +153,7 @@
         NSManagedObjectContext *context = [[[SMClient defaultClient] coreDataStore] contextForCurrentThread];
         Todo *newTodo = [NSEntityDescription insertNewObjectForEntityForName:@"Todo" inManagedObjectContext:context];
         // assignObjectId is provided by the StackMob iOS SDK, and generates a random string ID for the object. This needs to be done for every new object before it is saved.
-        newTodo.todoId = [newTodo assignObjectId];
+        [newTodo assignObjectId];
         newTodo.title = [[alertView textFieldAtIndex:0] text];
         
         [self.refreshControl beginRefreshing];
