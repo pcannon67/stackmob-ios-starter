@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="O8c-yy-DnQ">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <development version="4600" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <scenes>
+        <!--Todo Table View Controller - Todo List-->
+        <scene sceneID="bkn-S7-bR1">
+            <objects>
+                <tableViewController id="ybv-Kw-tgL" customClass="TodoTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="lvq-OX-4hI">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="RdF-QE-feO">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <segue destination="pSg-Hl-8bY" kind="push" identifier="TodoDetail" id="dev-Wc-SzQ"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Todo List" id="QQp-Uy-bve"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tji-yo-ACL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="673" y="140"/>
+        </scene>
+        <!--Todo Detail View Controller - Todo Details-->
+        <scene sceneID="L82-yY-AB9">
+            <objects>
+                <viewController id="pSg-Hl-8bY" customClass="TodoDetailViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qp0-cb-dwG">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mmV-iR-XS1">
+                                <rect key="frame" x="20" y="98" width="280" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="pSg-Hl-8bY" id="Dd6-Un-dcF"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NXB-4y-1Hp">
+                                <rect key="frame" x="185" y="156" width="115" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="115" id="QLo-pK-FRZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" red="0.19607843137254902" green="0.30980392156862746" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveTodo:" destination="pSg-Hl-8bY" eventType="touchUpInside" id="P04-cX-ubU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wdd-fk-6um">
+                                <rect key="frame" x="20" y="156" width="115" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="115" id="O4h-Iu-1JL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Delete">
+                                    <color key="titleColor" red="0.19607843137254902" green="0.30980392156862746" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteTodo:" destination="pSg-Hl-8bY" eventType="touchUpInside" id="k84-aK-L9G"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mmV-iR-XS1" firstAttribute="leading" secondItem="Qp0-cb-dwG" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="3Tg-ZU-or4"/>
+                            <constraint firstItem="wdd-fk-6um" firstAttribute="top" secondItem="Qp0-cb-dwG" secondAttribute="top" constant="156" id="5HZ-F8-UbL"/>
+                            <constraint firstItem="wdd-fk-6um" firstAttribute="leading" secondItem="mmV-iR-XS1" secondAttribute="leading" type="default" id="5Qn-jl-U0z"/>
+                            <constraint firstItem="wdd-fk-6um" firstAttribute="baseline" secondItem="NXB-4y-1Hp" secondAttribute="baseline" type="default" id="N6a-hd-k6K"/>
+                            <constraint firstItem="mmV-iR-XS1" firstAttribute="top" secondItem="Qp0-cb-dwG" secondAttribute="top" constant="98" id="fiL-Hz-4SE"/>
+                            <constraint firstAttribute="trailing" secondItem="mmV-iR-XS1" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="kO4-Z5-yuM"/>
+                            <constraint firstItem="mmV-iR-XS1" firstAttribute="trailing" secondItem="NXB-4y-1Hp" secondAttribute="trailing" type="default" id="rbr-Dg-beq"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Todo Details" id="9Bm-5z-LcG"/>
+                    <connections>
+                        <outlet property="todoTextField" destination="mmV-iR-XS1" id="MAw-gh-uw1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oHA-56-bxw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1091" y="140"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="v0A-hi-Oeq">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="O8c-yy-DnQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ASn-Pp-JlB">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ybv-Kw-tgL" kind="relationship" relationship="rootViewController" id="OEX-fK-gmT"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mFg-np-aFZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="139" y="140"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
