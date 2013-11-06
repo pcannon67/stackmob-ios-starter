@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="O8c-yy-DnQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="O8c-yy-DnQ">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
+        <deployment defaultVersion="1552" identifier="iOS"/>
         <development version="4600" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Todo Table View Controller - Todo List-->
@@ -44,7 +44,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mmV-iR-XS1">
-                                <rect key="frame" x="20" y="98" width="280" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -52,7 +51,6 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NXB-4y-1Hp">
-                                <rect key="frame" x="185" y="156" width="115" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="115" id="QLo-pK-FRZ"/>
                                 </constraints>
@@ -69,7 +67,6 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wdd-fk-6um">
-                                <rect key="frame" x="20" y="156" width="115" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="115" id="O4h-Iu-1JL"/>
                                 </constraints>
@@ -82,7 +79,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="deleteTodo:" destination="pSg-Hl-8bY" eventType="touchUpInside" id="k84-aK-L9G"/>
+                                    <action selector="confirmTodoDeletion:" destination="pSg-Hl-8bY" eventType="touchUpInside" id="6pw-Vy-EmE"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -104,7 +101,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oHA-56-bxw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1091" y="140"/>
+            <point key="canvasLocation" x="1119" y="146"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="v0A-hi-Oeq">

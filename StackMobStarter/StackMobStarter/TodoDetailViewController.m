@@ -15,11 +15,18 @@
  */
 
 #import "TodoDetailViewController.h"
+#import "AppDelegate.h"
 /*
  Import the StackMob and Todo headers.
  */
 #import "StackMob.h"
 #import "Todo.h"
+
+@interface TodoDetailViewController()
+
+- (void)deleteTodo:(NSString*)todoId;
+
+@end
 
 @implementation TodoDetailViewController
 
@@ -51,6 +58,7 @@
 {
     [super viewDidLoad];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -91,7 +99,7 @@
     }
 }
 
-- (IBAction)deleteTodo:(id)sender {
+- (void)deleteTodo:(NSString*) todoId {
     
     /*
      Delete workflow:
@@ -100,7 +108,7 @@
      
      */
     
-    [[[SMClient defaultClient] dataStore] deleteObjectId:[self.todoObject objectForKey:@"todo_id"] inSchema:@"todo" onSuccess:^(NSString *objectId, NSString *schema) {
+    [[[SMClient defaultClient] dataStore] deleteObjectId:todoId inSchema:@"todo" onSuccess:^(NSString *objectId, NSString *schema) {
         NSLog(@"Delete success");
         [self.navigationController popViewControllerAnimated:YES];
     } onFailure:^(NSError *error, NSString *objectId, NSString *schema) {
@@ -108,4 +116,18 @@
     }];
     
 }
+
+- (IBAction)confirmTodoDeletion:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Todo" message:@"Are you sure you want to delete this todo item?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes", nil];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        [self deleteTodo:[self.todoObject objectForKey:@"todo_id"]];
+    }
+    
+}
+
 @end

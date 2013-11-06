@@ -22,6 +22,12 @@
 #import "Todo.h"
 #import "TodoDetailViewController.h"
 
+#import "AppDelegate.h"
+
+
+#define ADD_NEW_TAG 1
+#define DELETE_CONFIRMATION_TAG 2
+
 @interface TodoTableViewController ()
 
 /*
@@ -35,6 +41,11 @@
 - (void)refreshTable;
 - (void)insertNewTodo:(id)sender;
 
+- (void)deleteTodo:(NSString*) todoId;
+- (void)showDeleteTodoConfirmation;
+
+@property (strong, nonatomic) NSString *toDeleteTodoId;
+
 @end
 
 @implementation TodoTableViewController
@@ -43,6 +54,8 @@
  Synthesize the objects property we defined.
  */
 @synthesize objects = _objects;
+
+@synthesize toDeleteTodoId = _toDeleteTodoId;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -78,9 +91,7 @@
      */
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl  = refreshControl;
-    [refreshControl beginRefreshing];
-    [self refreshTable];
+    self.refreshControl = refreshControl;
 }
 
 - (void)didReceiveMemoryWarning
@@ -100,7 +111,7 @@
      Then perform the query, assign the results to our objects property, and reload the table data.
      */
     
-    SMQuery *query = [[SMQuery alloc] initWithSchema:@"todo"];
+    SMQuery *query = [[SMQuery alloc] initWithSchema:TODO_SCHEMA];
     
     [query orderByField:@"createddate" ascending:NO];
     
@@ -123,7 +134,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Add New Todo" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create", nil];
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [[alertView textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeSentences];
-    
+    [alertView setTag:ADD_NEW_TAG];
     [alertView show];
 }
 
@@ -132,26 +143,54 @@
  */
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    /*
-     If the user pressed "Create":
-     
-     * Create a dictionary and set the text field value for the todo's title field.
-     * Create a new todo object via the datastore.
-     
-     */
-    if (buttonIndex == 1) {
-        
-        NSDictionary *todoDict = [NSDictionary dictionaryWithObjectsAndKeys:[[alertView textFieldAtIndex:0] text], @"title", nil];
-        
-        [self.refreshControl beginRefreshing];
-        
-        [[[SMClient defaultClient] dataStore] createObject:todoDict inSchema:@"todo" onSuccess:^(NSDictionary *object, NSString *schema) {
-            [self refreshTable];
-        } onFailure:^(NSError *error, NSDictionary *object, NSString *schema) {
-            NSLog(@"Error saving todo: %@", error);
-        }];
+    if (alertView.tag == ADD_NEW_TAG) {
+        /*
+         If the user pressed "Create":
+         
+         * Create a dictionary and set the text field value for the todo's title field.
+         * Create a new todo object via the datastore.
+         
+         */
+        if (buttonIndex == 1) {
+            
+            NSDictionary *todoDict = [NSDictionary dictionaryWithObjectsAndKeys:[[alertView textFieldAtIndex:0] text], @"title", nil];
+            
+            [self.refreshControl beginRefreshing];
+            
+            [[[SMClient defaultClient] dataStore] createObject:todoDict inSchema:TODO_SCHEMA onSuccess:^(NSDictionary *object, NSString *schema) {
+                [self refreshTable];
+            } onFailure:^(NSError *error, NSDictionary *object, NSString *schema) {
+                NSLog(@"Error saving todo: %@", error);
+            }];
+            
+        }
+    } else if (alertView.tag == DELETE_CONFIRMATION_TAG) {
+        /*
+         if the user pressed "Yes": Delete the todo
+         
+         You can also check for the title instead of index.
+         Index starts from 0 (cancel button in this case)
+         */
+        if (buttonIndex == 1) {
+            [self deleteTodo:self.toDeleteTodoId];
+        }
     }
     
+}
+
+- (void)showDeleteTodoConfirmation {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Todo" message:@"Are you sure you want to delete this todo?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes", nil];
+    [alertView setTag:DELETE_CONFIRMATION_TAG];
+    [alertView show];
+}
+
+- (void)deleteTodo:(NSString *)todoId {
+    [[[SMClient defaultClient] dataStore] deleteObjectId:todoId inSchema:TODO_SCHEMA onSuccess:^(NSString *objectId, NSString *schema) {
+        NSLog(@"Delete success");
+        [self refreshTable];
+    } onFailure:^(NSError *error, NSString *objectId, NSString *schema) {
+        NSLog(@"Error saving: %@", error);
+    }];
 }
 
 #pragma mark - Table view data source
@@ -179,7 +218,7 @@
     /*
      We will display the title of the todo object corresponding to the current row.
      */
-    cell.textLabel.text = [[self.objects objectAtIndex:indexPath.row] objectForKey:@"title"];
+    cell.textLabel.text = [[self.objects objectAtIndex:indexPath.row] objectForKey:TODO_TITLE_FIELD];
         
     return cell;
 }
@@ -225,14 +264,8 @@
          
          */
         NSDictionary *todoObject = [self.objects objectAtIndex:indexPath.row];
-        NSString *todo_id = [todoObject objectForKey:@"todo_id"];
-        
-        [[[SMClient defaultClient] dataStore] deleteObjectId:todo_id inSchema:@"todo" onSuccess:^(NSString *objectId, NSString *schema) {
-            NSLog(@"Delete success");
-            [self refreshTable];
-        } onFailure:^(NSError *error, NSString *objectId, NSString *schema) {
-            NSLog(@"Error saving: %@", error);
-        }];
+        self.toDeleteTodoId = [todoObject objectForKey:TODO_ID_FIELD];
+        [self showDeleteTodoConfirmation];
     }
 }
 

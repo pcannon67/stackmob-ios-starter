@@ -16,6 +16,10 @@
 
 #import <UIKit/UIKit.h>
 
+#define TODO_SCHEMA @"todo"
+#define TODO_ID_FIELD @"todo_id"
+#define TODO_TITLE_FIELD @"title"
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

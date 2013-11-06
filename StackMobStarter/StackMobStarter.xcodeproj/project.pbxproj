@@ -24,10 +24,8 @@
 		DE8416DB1808CE67007E0440 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DE8416C71808CE67007E0440 /* InfoPlist.strings */; };
 		DE8416DC1808CE67007E0440 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8416C91808CE67007E0440 /* main.m */; };
 		DE8416DD1808CE67007E0440 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE8416CA1808CE67007E0440 /* MainStoryboard.storyboard */; };
-		DE8416DF1808CE67007E0440 /* StackMobStarterProject.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DE8416CD1808CE67007E0440 /* StackMobStarterProject.xcdatamodeld */; };
 		DE8416E01808CE67007E0440 /* starter-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DE8416CF1808CE67007E0440 /* starter-app-icon.png */; };
 		DE8416E11808CE67007E0440 /* starter-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE8416D01808CE67007E0440 /* starter-app-icon@2x.png */; };
-		DE8416E21808CE67007E0440 /* Todo.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8416D21808CE67007E0440 /* Todo.m */; };
 		DE8416E31808CE67007E0440 /* TodoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8416D41808CE67007E0440 /* TodoDetailViewController.m */; };
 		DE8416E41808CE67007E0440 /* TodoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8416D61808CE67007E0440 /* TodoTableViewController.m */; };
 /* End PBXBuildFile section */
@@ -106,11 +104,8 @@
 		DE8416CA1808CE67007E0440 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		DE8416CB1808CE67007E0440 /* StackMobStarter-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "StackMobStarter-Info.plist"; sourceTree = "<group>"; };
 		DE8416CC1808CE67007E0440 /* StackMobStarter-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StackMobStarter-Prefix.pch"; sourceTree = "<group>"; };
-		DE8416CE1808CE67007E0440 /* StackMobStarterProject.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StackMobStarterProject.xcdatamodel; sourceTree = "<group>"; };
 		DE8416CF1808CE67007E0440 /* starter-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "starter-app-icon.png"; sourceTree = "<group>"; };
 		DE8416D01808CE67007E0440 /* starter-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "starter-app-icon@2x.png"; sourceTree = "<group>"; };
-		DE8416D11808CE67007E0440 /* Todo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Todo.h; sourceTree = "<group>"; };
-		DE8416D21808CE67007E0440 /* Todo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Todo.m; sourceTree = "<group>"; };
 		DE8416D31808CE67007E0440 /* TodoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TodoDetailViewController.h; sourceTree = "<group>"; };
 		DE8416D41808CE67007E0440 /* TodoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TodoDetailViewController.m; sourceTree = "<group>"; };
 		DE8416D51808CE67007E0440 /* TodoTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TodoTableViewController.h; sourceTree = "<group>"; };
@@ -260,11 +255,8 @@
 				DE8416CA1808CE67007E0440 /* MainStoryboard.storyboard */,
 				DE8416CB1808CE67007E0440 /* StackMobStarter-Info.plist */,
 				DE8416CC1808CE67007E0440 /* StackMobStarter-Prefix.pch */,
-				DE8416CD1808CE67007E0440 /* StackMobStarterProject.xcdatamodeld */,
 				DE8416CF1808CE67007E0440 /* starter-app-icon.png */,
 				DE8416D01808CE67007E0440 /* starter-app-icon@2x.png */,
-				DE8416D11808CE67007E0440 /* Todo.h */,
-				DE8416D21808CE67007E0440 /* Todo.m */,
 				DE8416D31808CE67007E0440 /* TodoDetailViewController.h */,
 				DE8416D41808CE67007E0440 /* TodoDetailViewController.m */,
 				DE8416D51808CE67007E0440 /* TodoTableViewController.h */,
@@ -345,9 +337,7 @@
 				DE8416DC1808CE67007E0440 /* main.m in Sources */,
 				DE8416E41808CE67007E0440 /* TodoTableViewController.m in Sources */,
 				DE8416E31808CE67007E0440 /* TodoDetailViewController.m in Sources */,
-				DE8416DF1808CE67007E0440 /* StackMobStarterProject.xcdatamodeld in Sources */,
 				DE8416D71808CE67007E0440 /* AppDelegate.m in Sources */,
-				DE8416E21808CE67007E0440 /* Todo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,7 +419,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StackMobStarter/StackMobStarter-Prefix.pch";
 				INFOPLIST_FILE = "StackMobStarter/StackMobStarter-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"${SRCROOT}/StackMob-v2.2.0",
@@ -448,7 +438,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StackMobStarter/StackMobStarter-Prefix.pch";
 				INFOPLIST_FILE = "StackMobStarter/StackMobStarter-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"${SRCROOT}/StackMob-v2.2.0",
@@ -481,19 +471,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		DE8416CD1808CE67007E0440 /* StackMobStarterProject.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				DE8416CE1808CE67007E0440 /* StackMobStarterProject.xcdatamodel */,
-			);
-			currentVersion = DE8416CE1808CE67007E0440 /* StackMobStarterProject.xcdatamodel */;
-			path = StackMobStarterProject.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = DE01BB4F17712C7200D80549 /* Project object */;
 }

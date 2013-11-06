@@ -31,6 +31,6 @@
  These actions are hooked up to the two buttons in our Storyboard's Todo Detail view.
  */
 - (IBAction)saveTodo:(id)sender;
-- (IBAction)deleteTodo:(id)sender;
+- (IBAction)confirmTodoDeletion:(id)sender;
 
 @end
